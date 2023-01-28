@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Mvi</string>
+    <string name="update_text">Update!</string>
+    <string name="delete_text">Delete!</string>
+</resources>
