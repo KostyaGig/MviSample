@@ -9,7 +9,7 @@ import ru.zinoviewk.mvi.ui.common.BaseViewModel
 
 class HomeViewModel(
     private val useCase: HomeUseCase
-) : BaseViewModel<HomeState, HomeIntent, HomeAction>(HomeState.Empty) {
+) : BaseViewModel<HomeState, HomeIntent, HomeAction>(HomeState.Empty()) {
 
     init {
         dispatchIntent(HomeIntent.LoadDefaultHomeData)
@@ -20,6 +20,7 @@ class HomeViewModel(
             is HomeIntent.LoadDefaultHomeData -> HomeAction.LoadDefaultData
             is HomeIntent.UpdateHomeData -> HomeAction.UpdateData(intent.newData)
             is HomeIntent.DeleteHomeData -> HomeAction.DeleteData
+            is HomeIntent.SaveToCache -> HomeAction.SaveToCache(intent.isChecked)
         }
     }
 
@@ -36,11 +37,12 @@ class HomeViewModel(
                     .updateData(action.newData)
                     .collect(::emitState)
                 is HomeAction.DeleteData -> useCase.deleteData().collect(::emitState)
+                is HomeAction.SaveToCache -> _state.value = state.value.copy(isSaveToCache = action.isChecked)
             }
         }
     }
 
     private fun emitState(result: HomeResult) {
-        _state.value = result.reduce()
+        _state.value = result.reduce(oldState = state.value)
     }
 }

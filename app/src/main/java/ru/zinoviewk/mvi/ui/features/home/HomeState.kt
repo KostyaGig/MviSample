@@ -4,13 +4,47 @@ import ru.zinoviewk.mvi.ui.common.ViewState
 
 sealed class HomeState : ViewState {
 
-    object Empty : HomeState()
+    abstract val saveSaveToCache: SaveToCache
+    abstract fun copy(isSaveToCache: Boolean) : HomeState
 
-    class Progress(val progress: Int) : HomeState()
+    data class Empty(
+        override val saveSaveToCache: SaveToCache = SaveToCache(isChecked = false)
+    ) : HomeState() {
 
-    class Success(val data: String) : HomeState()
+        override fun copy(isSaveToCache: Boolean): HomeState = copy(saveSaveToCache = SaveToCache(isSaveToCache))
+    }
 
-    class DeleteSuccess(val message: String) : HomeState()
+    data class Progress(
+        val progress: Int,
+        override val saveSaveToCache: SaveToCache = SaveToCache(isChecked = false)
+    ) : HomeState() {
 
-    class Error(val message: String) : HomeState()
+        override fun copy(isSaveToCache: Boolean): HomeState = copy(saveSaveToCache = SaveToCache(isSaveToCache))
+    }
+
+    data class Success(
+        val data: String,
+        override val saveSaveToCache: SaveToCache = SaveToCache(isChecked = false)
+    ) : HomeState() {
+
+        override fun copy(isSaveToCache: Boolean): HomeState = copy(saveSaveToCache = SaveToCache(isSaveToCache))
+    }
+
+    data class DeleteSuccess(
+        val message: String,
+        override val saveSaveToCache: SaveToCache = SaveToCache(isChecked = false)
+    ) : HomeState() {
+
+        override fun copy(isSaveToCache: Boolean): HomeState = copy(saveSaveToCache = SaveToCache(isSaveToCache))
+    }
+
+    data class Error(
+        val message: String,
+        override val saveSaveToCache: SaveToCache = SaveToCache(isChecked = false)
+    ) : HomeState() {
+
+        override fun copy(isSaveToCache: Boolean): HomeState = copy(saveSaveToCache = SaveToCache(isSaveToCache))
+    }
+
+    data class SaveToCache(val isChecked: Boolean)
 }

@@ -32,6 +32,10 @@ class HomeFragment :
             dispatchIntent(HomeIntent.DeleteHomeData)
         }
 
+        binding.saveToCacheChb.setOnCheckedChangeListener { _, isChecked ->
+            dispatchIntent(HomeIntent.SaveToCache(isChecked))
+        }
+
     }
 
     override fun render(state: HomeState) {
